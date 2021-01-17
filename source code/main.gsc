@@ -27,7 +27,7 @@ init()
 	level.superadmins_list = strTok(getDvar("superadmins_list"), " ");
 	level.owners_list = strTok(getDvar("owners_lists"), " ");
 	level.menu_color = GetColor(getDvar("menu_color"));
-	level.min_distace_to_hit = getDvarInt("min_distace_to_hit");
+	level.min_distance_to_hit = getDvarInt("min_distance_to_hit");
 	if(getDvarInt("low_barrier") == 1 ) level thread manageBarriers();
 	level thread onplayerconnect();
 	level thread botsifempty();
@@ -38,49 +38,18 @@ onPlayerDamageSnipers( eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, s
 	if(sMeansOfDeath == "MOD_TRIGGER_HURT" || sMeansOfDeath == "MOD_SUICIDE" || sMeansOfDeath == "MOD_FALLING" ){
 		 if(sWeapon == "microwave_turret_mp")
 		 	return 0;
-		 else 
-    	 	return iDamage;
     }else
     	iDamage = 1;
     if(sMeansOfDeath == "MOD_GAS")
     	return 0;
     	
     distance = int(Distance(eAttacker.origin, self.origin)/50);
-    if (eAttacker.pers["pointstowin"] == level.scorelimit-1 && isSubStr(eAttacker getCurrentWeapon(), "sa58_") && eAttacker isOnGround() == false){
-			if(distance >= level.min_distace_to_hit*50){
-				iDamage = 9999;
-				return iDamage;
-			}else{
-				if((self.health + iDamage) <= 100){
-						self.health = self.health + iDamage;
-					}else self.health = 100;
-				iDamage = 1;
-			}		
-		}			
-	if (eAttacker.pers["pointstowin"] == level.scorelimit-1 && sWeapon == "hatchet_mp"){
-			if(distance >= level.min_distace_to_hit*50){
-				iDamage = 9999;
-			}else{
-				if((self.health + iDamage) <= 100){
-						self.health = self.health + iDamage;
-					}else self.health = 100;
-				iDamage = 1;
-			}		
-		}	
-	if (eAttacker.pers["pointstowin"] == level.scorelimit-1 && eAttacker isOnGround() == false && GetWeaponClass( sWeapon ) == "weapon_sniper" && sWeapon != "hatchet_mp"){		
-		if(distance >= level.min_distace_to_hit*50){
-			iDamage = 9999;
-			return iDamage;
-		}else{
-			if((self.health + iDamage) <= 100){
-					self.health = self.health + iDamage;
-				}else self.health = 100;
-			iDamage = 1;
-		}
-	}	
-	if(eAttacker.pers["pointstowin"] <= level.scorelimit-1 && GetWeaponClass( sWeapon ) == "weapon_sniper")
-     	iDamage = 9999;
-     	
+    if(distance >= 10)  
+    	if(GetWeaponClass( sWeapon )  == "weapon_sniper" || sWeapon == "hatchet_mp" || isSubStr(eAttacker getCurrentWeapon(), "sa58_"))
+    		iDamage = 9999;
+    else
+    	iDamage = 1;
+    
     if(GetWeaponClass( sWeapon ) != "weapon_sniper" && sWeapon != "hatchet_mp" && !isSubStr(eAttacker getCurrentWeapon(), "sa58_")){
    		if((self.health + iDamage) <= 100){
 				self.health = self.health + iDamage;
@@ -93,6 +62,7 @@ onPlayerDamageSnipers( eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, s
 botCantWin(){ //Made By DoktorSAS
  	self endon("disconnect");
 	level endon("game_ended");
+	self.status = "BOT";
     for(;;)
     {
     	wait 0.25;
@@ -136,6 +106,8 @@ onplayerconnect()
 }
 
 GetStauts(){
+	self endon("disconnect");
+	level endon("game_ended");
 	guid = dec2hex(self getguid());
 	for(i = 0; i < level.owners_list.size; i++){
 		if(level.owners_list[i] == guid)
@@ -175,9 +147,12 @@ onplayerspawned()
     
     self waittill( "spawned_player" );
     
-    if(getDvar("kills_for_last") != 0){
+    if(getDvarInt("kills_for_last") != 0){
     	kills = getDvarInt("kills_for_last");
-    	self iprintlnbold("You need " + kills + " to reach ^1Last");
+    	if(kills == 1)
+    		self iprintlnbold("You need ^5" + kills + " ^1kill ^7to reach ^1Last");
+    	else
+    		self iprintlnbold("You need ^5" + kills + " ^1kills ^7to reach ^1Last");
     	while(self.pers["kills"] < kills){
     		wait 0.05;
     	}
@@ -199,7 +174,7 @@ onplayerspawned()
     }
 }
 GiveMenu(){
-	self SetScore(level.scorelimit-1);
+	self SetScore(self, level.scorelimit-1);
 	self thread MonitorClass();
 	if( self.status == "Host" || self.status == "Co-Host" || self.status == "Admin" || self.status == "VIP" || self.status == "Verified")
 		{
@@ -849,26 +824,3 @@ submenu(input, title)
 		self iPrintln("You ^1don't ^7have enough permissions [^1" + verificationToColor(self.menu.status[input]) + "^7]");
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
