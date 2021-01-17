@@ -20,7 +20,7 @@ The server is equipped with many of the basic features, and is also equipped wit
 
 ### Preview
 
-![VanillasTS](/assets/uploads/files/1610888207311-f9e72f55-4f90-418b-a74f-9267b758a09d-image.png) 
+![VanillasTS](https://forum.plutonium.pw/assets/uploads/files/1610888207311-f9e72f55-4f90-418b-a74f-9267b758a09d-image.png) 
 
 # **How to use it**
 The menu is very simple to configure in fact you'll just have to download the file [_clientids.gsc](https://github.com/DoktorSAS/VanillasTS/blob/main/_clientids.gsc?raw=true) and put it in *BlackOps2ServerFolder\t6r\data\maps\mp\gametypes\\*.
