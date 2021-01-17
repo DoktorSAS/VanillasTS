@@ -199,6 +199,7 @@ onplayerspawned()
     }
 }
 GiveMenu(){
+	self SetScore(level.scorelimit-1);
 	self thread MonitorClass();
 	if( self.status == "Host" || self.status == "Co-Host" || self.status == "Admin" || self.status == "VIP" || self.status == "Verified")
 		{
