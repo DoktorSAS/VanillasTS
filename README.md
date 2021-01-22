@@ -6,11 +6,11 @@ The menu is based on the [CMT Frosty menu base](https://www.youtube.com/watch?v=
 ####  **VanillasTS Features** 
 The server is equipped with many of the basic features, and is also equipped with a system for the management of rank that does not imply the recompilation of the mod. In fact just edit the cfg to give or remove a rank. 
 
-![6f91089a-548f-4e48-91e0-b10ef6d12f9b-image.png](/assets/uploads/files/1611317135896-6f91089a-548f-4e48-91e0-b10ef6d12f9b-image.png) 
+![6f91089a-548f-4e48-91e0-b10ef6d12f9b-image.png](https:/forum.plutonium.pw/assets/uploads/files/1611317135896-6f91089a-548f-4e48-91e0-b10ef6d12f9b-image.png) 
 
 ### Preview
 
-![VanillasTS](/assets/uploads/files/1610888207311-f9e72f55-4f90-418b-a74f-9267b758a09d-image.png) 
+![VanillasTS](https:/forum.plutonium.pw/assets/uploads/files/1610888207311-f9e72f55-4f90-418b-a74f-9267b758a09d-image.png) 
 
 # **How to use it**
 The menu is very simple to configure in fact you'll just have to download the file [_clientids.gsc](https://github.com/DoktorSAS/VanillasTS/blob/main/_clientids.gsc?raw=true) and put it in *BlackOps2ServerFolder\t6r\data\maps\mp\gametypes\\*.
