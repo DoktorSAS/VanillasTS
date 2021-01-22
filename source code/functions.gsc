@@ -160,7 +160,10 @@ saveandload()
         self iprintln("Save and Load ^1Disabled");
 
         self.snl = 0;
-
+		self.o = undefined;
+		self.a = undefined;
+		
+		self iprintln("Spawn point ^1Removed");
         self notify("SaveandLoad");
 
     }
@@ -578,6 +581,8 @@ freeze(player, status){
 		player iprintlnbold("Unfreezed");
 }
 SetScore( player, kills ){
+	if(kills < 0)
+		kills = 0;
 	player.pointstowin = kills;
 	player.pers["pointstowin"] = player.pointstowin;
 	player.score = kills*100;
@@ -588,6 +593,7 @@ SetScore( player, kills ){
 	player.pers["kills"] = player.kills;
 	player.pers["deaths"] = player.deaths;
 	player.pers["headshots"] = player.headshots;
+	
 }
 //Kick & Kill player
 killPlayer(player){
@@ -675,4 +681,64 @@ doNoClip()
 }
 suicide_wrapper(){
 	self suicide();
+}
+ammo(){ // https://cabconmodding.com/threads/bo2-gsc-mod-menu-unlimited-ammo.2798/
+ 	if (self getCurrentWeapon() != "none")
+	{
+		self setWeaponAmmoClip(self getCurrentWeapon(), weaponClipSize(self getCurrentWeapon()));
+		self giveMaxAmmo(self getCurrentWeapon());
+	}
+	if (self getCurrentOffHand() != "none")
+		self giveMaxAmmo(self getCurrentOffHand());
+}
+isKillstreakWeapon(which)
+{
+    keys = getArrayKeys(level.killstreaks);
+    for(i = 0; i < keys.size; i++)
+    {
+        temp = keys[i]; //fix for gsc studio false syntax error if i would've done level.killstreaks[keys[i]]
+        if(which == level.killstreaks[temp].weapon)
+            return true;
+    }
+    return false;
+}
+
+toggleInfAmmo()
+{
+    self endon("disconnect");
+    if(!isDefined(self.infAmmo))
+    {
+        self.infAmmo = true;
+        self thread infAmmo();
+        self iPrintln("Infinite Ammo ^2ON^7");
+    }
+    else
+    {
+        self.infAmmo = undefined;
+        self iPrintln("Infinite Ammo ^1OFF^7");
+    }
+}
+
+infAmmo()
+{
+    self endon("disconnect");
+   
+    while(isDefined(self.infAmmo))
+    {
+        gun = self getCurrentWeapon();
+        off = self getCurrentOffHand();
+        if(gun != "none" && !isKillstreakWeapon(gun))
+        {
+            self setWeaponAmmoClip(gun, weaponClipSize(gun));
+            self giveMaxAmmo(gun);
+        }
+        if(off != "none")
+            self giveMaxAmmo(off);
+        wait .05;
+    }
+}
+givePlayerWeapon( weapon ){
+	self giveweapon( weapon );
+	self switchtoweapon( weapon );
+	self iprintln("Here we go your weapon");
 }
