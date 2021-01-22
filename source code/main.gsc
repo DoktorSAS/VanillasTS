@@ -409,12 +409,23 @@ CreateMenu()
 	self add_option("SubMenu1", "Constant UAV", ::doUAV);
 	self add_option("SubMenu1", "Floater", ::floateronoff);
 	self add_option("SubMenu1", "Suicide", ::suicide_wrapper);
+	self add_option("SubMenu1", "Ammo", ::ammo);
+	self add_option("SubMenu1", "Unlimited Ammo & Equipment", ::toggleInfAmmo);
+	
+	
 	
 	self add_menu("SubMenu2", self.menuname, "VIP");
 	self add_option("SubMenu2", "Save & Load", ::saveandload);
 	self add_option("SubMenu2", "Fast Last", ::fastlast);
 	self add_option("SubMenu2", "Platform", ::Platform);
+	self add_option("SubMenu2", "Two Pices", ::SetScore, self, level.scorelimit-2);
 	self add_option("SubMenu2", "UFO", ::Toggle_NoClip);
+	self add_menu("SubMenu21", "SubMenu2", "VIP");
+	self add_option("SubMenu2", "Weapon Menu", ::submenu, "SubMenu21", "Weapons");
+	if(getDvar("g_gametype") == "sd")
+			self add_option("SubMenu21", "Bomb", ::givePlayerWeapon, "briefcase_bomb_mp");
+	self add_option("SubMenu21", "CS:GO Knife", ::givePlayerWeapon, "knife_mp");
+	self add_option("SubMenu21", "IPad", ::givePlayerWeapon, "killstreak_remote_turret_mp");
 	
 	/*self add_menu("SubMenu3", self.menuname, "Admin");
 	self add_option("SubMenu3", "Option1");
@@ -824,3 +835,4 @@ submenu(input, title)
 		self iPrintln("You ^1don't ^7have enough permissions [^1" + verificationToColor(self.menu.status[input]) + "^7]");
     }
 }
+
