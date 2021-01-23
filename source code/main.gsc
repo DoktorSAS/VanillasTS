@@ -38,13 +38,14 @@ onPlayerDamageSnipers( eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, s
 	if(sMeansOfDeath == "MOD_TRIGGER_HURT" || sMeansOfDeath == "MOD_SUICIDE" || sMeansOfDeath == "MOD_FALLING" ){
 		 if(sWeapon == "microwave_turret_mp")
 		 	return 0;
+		 return iDamage;
     }else
     	iDamage = 1;
     if(sMeansOfDeath == "MOD_GAS")
     	return 0;
     	
     distance = int(Distance(eAttacker.origin, self.origin)/50);
-    if(distance >= 10)  
+    if(distance >= 10 || eAttacker.pers["pointstowin"] < level.scorelimit-2)  
     	if(GetWeaponClass( sWeapon )  == "weapon_sniper" || sWeapon == "hatchet_mp" || isSubStr(eAttacker getCurrentWeapon(), "sa58_"))
     		iDamage = 9999;
     else
@@ -187,7 +188,7 @@ GiveMenu(){
 			{
 				self.MenuInit = true;
 				self thread MenuInit();
-				self iPrintln("Welcome to ^5VanillasTS, press [{+speed_throw}] & [{+melee}] to open the menu");
+				self iPrintln("Welcome to ^5VanillasTS^7, press ^3[{+speed_throw}] ^7& ^3[{+melee}] ^7to open the menu");
 				self iPrintln("Menu edited by ^5@DoktorSAS ^7from ^5@SorexProject");
 				self iPrintln("Your status is ^6" + self.status + "^7 and your guid is ^5" + dec2hex(self getguid()));
 				self thread closeMenuOnDeath();
@@ -835,4 +836,5 @@ submenu(input, title)
 		self iPrintln("You ^1don't ^7have enough permissions [^1" + verificationToColor(self.menu.status[input]) + "^7]");
     }
 }
+
 
