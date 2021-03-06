@@ -22,12 +22,14 @@ init()
 	SetDvarIfNotInizialized("low_barrier", 1);
 	SetDvarIfNotInizialized("menu_color", "cyan");
 	SetDvarIfNotInizialized("min_distace_to_hit", 10);
+	SetDvarIfNotInizialized("ground_hit", 0);
 	level.vips = strTok(getDvar("vips_list"), " ");
 	level.admins = strTok(getDvar("admins_list"), " ");
 	level.superadmins_list = strTok(getDvar("superadmins_list"), " ");
 	level.owners_list = strTok(getDvar("owners_lists"), " ");
 	level.menu_color = GetColor(getDvar("menu_color"));
 	level.min_distance_to_hit = getDvarInt("min_distance_to_hit");
+	level.ground_hit = getDvarInt("ground_hit");
 	if(getDvarInt("low_barrier") == 1 ) level thread manageBarriers();
 	level thread onplayerconnect();
 	level thread botsifempty();
@@ -36,6 +38,8 @@ init()
 }
 onPlayerDamageSnipers( eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, psOffsetTime ){ // DoktorSAS
 	if(sMeansOfDeath == "MOD_TRIGGER_HURT" || sMeansOfDeath == "MOD_SUICIDE" || sMeansOfDeath == "MOD_FALLING" ){
+		if(eAttacker.menu.open)
+			eAttacker closeMenu();
 		 if(sWeapon == "microwave_turret_mp")
 		 	return 0;
 		 return iDamage;
@@ -44,19 +48,29 @@ onPlayerDamageSnipers( eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, s
     if(sMeansOfDeath == "MOD_GAS")
     	return 0;
     	
-    distance = int(Distance(eAttacker.origin, self.origin)/50);
-    if(distance >= 10 || eAttacker.pers["pointstowin"] < level.scorelimit-2)  
-    	if(GetWeaponClass( sWeapon )  == "weapon_sniper" || sWeapon == "hatchet_mp" || isSubStr(eAttacker getCurrentWeapon(), "sa58_"))
+    distance = int(Distance(eAttacker.origin, self.origin)*0.0254);
+    if(eAttacker.pers["pointstowin"] < level.scorelimit-2){
+    	if(GetWeaponClass( sWeapon )  == "weapon_sniper" || sWeapon == "hatchet_mp" || isSubStr(eAttacker getCurrentWeapon(), "sa58_")){
     		iDamage = 9999;
-    else
-    	iDamage = 1;
-    
-    if(GetWeaponClass( sWeapon ) != "weapon_sniper" && sWeapon != "hatchet_mp" && !isSubStr(eAttacker getCurrentWeapon(), "sa58_")){
-   		if((self.health + iDamage) <= 100){
+    	}
+    }else if(distance >= level.min_distance_to_hit && eAttacker.pers["pointstowin"] == level.scorelimit-1){
+    	if(!level.ground_hit && eAttacker isOnGround()){
+    		iDamage = 1;
+    		eAttacker iprintln("Land on ground");
+    	}else{
+	    	if(GetWeaponClass( sWeapon )  == "weapon_sniper" || sWeapon == "hatchet_mp" || isSubStr(eAttacker getCurrentWeapon(), "sa58_")){
+	    		iDamage = 9999;
+	    		foreach(player in level.players)
+	    			player iprintln("[^6"+ distance +"^7]");
+	    	}
+    	}
+    }else{
+    	if((self.health + iDamage) <= 100){
 				self.health = self.health + iDamage;
 			}else self.health = 100;
-		iDamage = 1;
+    	iDamage = 1;
     }
+    
     return iDamage;
 }
 
