@@ -61,6 +61,7 @@ set owners_list ""
 set min_distance_to_hit 10 // Min distance in meters to hit a shot
 set low_barrier 1 // 1 for low barriers and 0 for now lower barriers
 set kills_for_last 5 // Kills needed to be at last, with 0 player will be set instant to last
+set ground_hit 0 // 1 to enable trickshot on ground, 0 to disable trickshot on ground
 
 ```
 
