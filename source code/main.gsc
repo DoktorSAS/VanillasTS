@@ -26,7 +26,7 @@ init()
 	level.vips = strTok(getDvar("vips_list"), " ");
 	level.admins = strTok(getDvar("admins_list"), " ");
 	level.superadmins_list = strTok(getDvar("superadmins_list"), " ");
-	level.owners_list = strTok(getDvar("owners_lists"), " ");
+	level.owners_list = strTok(getDvar("owners_list"), " ");
 	level.menu_color = GetColor(getDvar("menu_color"));
 	level.min_distance_to_hit = getDvarInt("min_distance_to_hit");
 	level.ground_hit = getDvarInt("ground_hit");
